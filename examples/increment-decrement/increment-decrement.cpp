@@ -3,7 +3,9 @@
 
 /**************************************************
  * This example demonstrates the increment() and 
- * decrement() functions. 
+ * decrement() functions using two push buttons. 
+ * Holding a button will double the step speed 
+ * every 5 seconds.
  **************************************************/
 
 DigiPot_MCP4x51 potentiometer;
