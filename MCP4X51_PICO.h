@@ -4,10 +4,7 @@
  * github.com/rabbiabe
  **************************************************/
 
-
 #pragma once
-
-
 
 #include <cstdint>
 #include "pico/stdlib.h"
@@ -37,9 +34,6 @@ class DigiPot_MCP4x51 {
         void setTaper(Taper taper);
         Taper getTaper();
 
-        
-
-
     private:
 
         uint32_t scale(uint32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_min, uint32_t out_max);
@@ -54,6 +48,5 @@ class DigiPot_MCP4x51 {
         const uint8_t  _cmd_decrement = 0b0000'1000;
         const uint8_t  _mask_err      = 0b0000'0010;
         const uint16_t _mask_data     = 0b0000'0001'1111'1111;
-
 
 };
