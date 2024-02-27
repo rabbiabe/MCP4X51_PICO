@@ -10,7 +10,11 @@
     - `TAPER_W`: The first 25% of range follows `TAPER_A` and the last 25% follows `TAPER_C`; The middle 50% has a linear characteristic.
 ## Functions
 ### bool init(uint8_t pin_cs, uint8_t pot, Taper taper = TAPER_B, uint16_t wiper = 128)
-
+ Initializes the potentiometer. Parameters:
+ - `pin_cs`: SPI chip select pin. Specifying a pin other than the standard SPI CS pin allows for software control of multiple MCP4x51 devices.
+ - `pot`: 0 or 1 for MCP4251, should always be 0 for MCP4151.
+ - `taper`: One of the values enumerated in Taper (see above). If not specified, defaults to `TAPER_B`.
+ - `wiper`: Initial wiper position, 0-256. If not specified, defaults to 128.
 ### void setTaper(Taper taper)
 ### Taper getTaper()
 ### bool increment()
