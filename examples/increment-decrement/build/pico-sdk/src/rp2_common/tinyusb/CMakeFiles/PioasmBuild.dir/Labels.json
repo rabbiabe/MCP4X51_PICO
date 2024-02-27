@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/Users/abefriedman/Code/mylib/MCP4X51_PICO/examples/increment-decrement/build/pico-sdk/src/rp2_common/tinyusb/CMakeFiles/PioasmBuild"
+		},
+		{
+			"file" : "/Users/abefriedman/Code/mylib/MCP4X51_PICO/examples/increment-decrement/build/pico-sdk/src/rp2_common/tinyusb/CMakeFiles/PioasmBuild.rule"
+		},
+		{
+			"file" : "/Users/abefriedman/Code/mylib/MCP4X51_PICO/examples/increment-decrement/build/pico-sdk/src/rp2_common/tinyusb/CMakeFiles/PioasmBuild-complete.rule"
+		},
+		{
+			"file" : "/Users/abefriedman/Code/mylib/MCP4X51_PICO/examples/increment-decrement/build/pico-sdk/src/rp2_common/tinyusb/pioasm/src/PioasmBuild-stamp/PioasmBuild-build.rule"
+		},
+		{
+			"file" : "/Users/abefriedman/Code/mylib/MCP4X51_PICO/examples/increment-decrement/build/pico-sdk/src/rp2_common/tinyusb/pioasm/src/PioasmBuild-stamp/PioasmBuild-configure.rule"
+		},
+		{
+			"file" : "/Users/abefriedman/Code/mylib/MCP4X51_PICO/examples/increment-decrement/build/pico-sdk/src/rp2_common/tinyusb/pioasm/src/PioasmBuild-stamp/PioasmBuild-download.rule"
+		},
+		{
+			"file" : "/Users/abefriedman/Code/mylib/MCP4X51_PICO/examples/increment-decrement/build/pico-sdk/src/rp2_common/tinyusb/pioasm/src/PioasmBuild-stamp/PioasmBuild-install.rule"
+		},
+		{
+			"file" : "/Users/abefriedman/Code/mylib/MCP4X51_PICO/examples/increment-decrement/build/pico-sdk/src/rp2_common/tinyusb/pioasm/src/PioasmBuild-stamp/PioasmBuild-mkdir.rule"
+		},
+		{
+			"file" : "/Users/abefriedman/Code/mylib/MCP4X51_PICO/examples/increment-decrement/build/pico-sdk/src/rp2_common/tinyusb/pioasm/src/PioasmBuild-stamp/PioasmBuild-patch.rule"
+		},
+		{
+			"file" : "/Users/abefriedman/Code/mylib/MCP4X51_PICO/examples/increment-decrement/build/pico-sdk/src/rp2_common/tinyusb/pioasm/src/PioasmBuild-stamp/PioasmBuild-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"PioasmBuild"
+		],
+		"name" : "PioasmBuild"
+	}
+}
