@@ -15,8 +15,8 @@ bool DigiPot_MCP4x51::init(uint8_t pin_cs, uint8_t pot, Taper taper, uint16_t wi
 {
     _select = pin_cs;
     _address = pot << 4;
-    setTaper(taper);
-
+    bool taper_error_check = setTaper(taper);
+    if (!taper_error_check) return false;
     spi_init(SPI_CHANNEL, SPI_10_MHZ);
     spi_set_format(spi0, 16, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
     return writeValue(wiper);
@@ -57,10 +57,9 @@ bool DigiPot_MCP4x51::writeValue(uint16_t value)
 
 bool DigiPot_MCP4x51::writePosition(uint16_t thousandths) 
 {
-    uint16_t taperedValue = getTaperedValue(thousandths);
-    return writeValue(scale(taperedValue, 0, 1000, 0, 257));
+    uint16_t adjustedValue = taperPosition(thousandths);
+    return writeValue(scale(adjustedValue, 0, 1000, 0, 257));
 }
-
 
 int16_t DigiPot_MCP4x51::readValue()
 {
@@ -81,71 +80,96 @@ int16_t DigiPot_MCP4x51::readValue()
 
 int16_t DigiPot_MCP4x51::readPosition()
 {
-    return(scale(readValue(), 0, 257, 0, 1000));
+    int16_t value = readValue();
+    if (value < 0) return value;
+    return taperPosition(value, false);
 }
-
 
 uint32_t DigiPot_MCP4x51::scale(uint32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_min, uint32_t out_max)
 {
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-uint16_t DigiPot_MCP4x51::getTaperedValue(uint16_t inputValue)
+uint16_t DigiPot_MCP4x51::taperPosition(uint16_t inputValue, bool write)
 {
-    
     //error check
     if (inputValue > 1000) inputValue = 1000;
 
-    uint16_t adjustedValue;
+    uint8_t index;
+    uint16_t adjustedValue, adjustedUpperBound;
 
-    switch (_taper)
+    if (write) {    
+        index = (inputValue < 1000) ? inputValue / 250 : 3;
+        adjustedUpperBound = (index == 3) ? 1000 : ((index + 1) * 250) - 1; 
+        adjustedValue = scale(inputValue, index * 250, adjustedUpperBound, _taper_lower[index], _taper_upper[index]);
+    } else {
+        for (uint8_t j = 0; j < 4; j++) {
+            if ((inputValue >= _taper_lower[j]) && (inputValue <= _taper_upper[j])) index = j;
+        }
+        adjustedUpperBound = (index == 3) ? 1000 : ((index + 1) * 250) - 1; 
+        adjustedValue = scale(inputValue, _taper_lower[index], _taper_upper[index], index * 250, adjustedUpperBound);
+    }
+    return adjustedValue;
+}
+
+bool DigiPot_MCP4x51::setTaper(Taper taper)
+{
+
+    std::array <uint16_t, 4> lower, upper;
+
+    switch (taper)
     {
         case TAPER_A:
-            if (inputValue < 250) { 
-                adjustedValue = scale(inputValue, 0, 249, 0, 49);
-            } else if (inputValue >= 250 && inputValue < 500) {
-                adjustedValue = scale(inputValue, 250, 499, 50, 149);
-            } else if (inputValue >= 500 && inputValue < 750) {
-                adjustedValue = scale(inputValue, 500, 749, 150, 399);
-            } else {
-                adjustedValue = scale(inputValue, 750, 1000, 400, 1000);
-            }
+            lower = { 0, 50, 150, 40 };
+            upper = { 49, 149, 399, 1000};
             break;
         
         case TAPER_B:
-        default:
-            adjustedValue = inputValue;
+            lower = { 0, 250, 500, 750 };
+            upper = { 249, 499, 749, 1000};
             break;
-
+        
         case TAPER_C:
-            if (inputValue < 250) { 
-                adjustedValue = scale(inputValue, 0, 249, 0, 599);
-            } else if (inputValue >= 250 && inputValue < 500) {
-                adjustedValue = scale(inputValue, 250, 499, 600, 849);
-            } else if (inputValue >= 500 && inputValue < 750) {
-                adjustedValue = scale(inputValue, 500, 749, 850, 949);
-            } else {
-                adjustedValue = scale(inputValue, 750, 1000, 950, 1000);
-            }
+            lower = { 0, 600, 850, 950 };
+            upper = { 599, 849, 949, 1000};
             break;
-
+        
         case TAPER_W:
-            if (inputValue < 250) { 
-                adjustedValue = scale(inputValue, 0, 249, 0, 49);
-            } else if (inputValue >= 250 && inputValue < 750) {
-                adjustedValue = scale(inputValue, 250, 749, 50, 949);
-            } else {
-                adjustedValue = scale(inputValue, 750, 1000, 950, 1000);
-            }
+            lower = { 0, 50, 500, 950 };
+            upper = { 49, 499, 949, 1000};
             break;
-        }
-
-  return adjustedValue;
+        
+        case TAPER_M:
+            lower = { 0, 500, 1000, 1000 };
+            upper = { 499, 1000, 1000, 1000};
+            break;
+        
+        case TAPER_N:
+            lower = { 1000, 1000, 500, 0 };
+            upper = { 1000, 1000, 1000, 499};
+            break;
+        
+        case TAPER_CUSTOM:
+        default:
+            return false;
+            break;
+    }
+    _taper = taper;
+    for (uint8_t i = 0; i < 4; i++) {
+        _taper_lower[i] = lower[i];
+        _taper_upper[i] = upper[i];
+    }
+    return true;
 }
 
-void DigiPot_MCP4x51::setTaper(Taper taper)
+bool DigiPot_MCP4x51::setTaper(uint16_t lower_bounds[4], uint16_t upper_bounds[4])
 {
-    _taper = taper;
+    _taper = TAPER_CUSTOM;
+    for (uint8_t i = 0; i < 4; i++) {
+        _taper_lower[i] = lower_bounds[i];
+        _taper_upper[i] = upper_bounds[i];
+    }
+    return true;
 }
 
 Taper DigiPot_MCP4x51::getTaper()

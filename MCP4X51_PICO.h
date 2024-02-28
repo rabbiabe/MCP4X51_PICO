@@ -7,6 +7,7 @@
 #pragma once
 
 #include <cstdint>
+#include <array>
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
 
@@ -18,6 +19,9 @@ enum Taper {
     TAPER_B,
     TAPER_C,
     TAPER_W,
+    TAPER_M,
+    TAPER_N,
+    TAPER_CUSTOM,
 };
 
 class DigiPot_MCP4x51 {
@@ -31,16 +35,19 @@ class DigiPot_MCP4x51 {
         bool writePosition(uint16_t thousandths);
         int16_t readValue();
         int16_t readPosition();
-        void setTaper(Taper taper);
+        bool setTaper(Taper taper);
+        bool setTaper(uint16_t lower_bounds[4], uint16_t upper_bounds[4]);
         Taper getTaper();
 
     private:
 
         uint32_t scale(uint32_t x, uint32_t in_min, uint32_t in_max, uint32_t out_min, uint32_t out_max);
-        uint16_t getTaperedValue(uint16_t inputValue);
+        uint16_t taperPosition(uint16_t inputValue, bool write = true);
 
         uint8_t _select, _address;
+        uint16_t _taper_lower[4], _taper_upper[4];
         Taper _taper;
+
 
         const uint8_t  _cmd_write     = 0b0000'0000;
         const uint8_t  _cmd_read      = 0b0000'1100;
