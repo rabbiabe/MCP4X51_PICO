@@ -2,6 +2,9 @@
  * PICO_MCP4X51 Library v1.1 (2024-02-25)
  * Written by Abe Friedman 
  * github.com/rabbiabe
+ *
+ * Header and MakeFile based on examples from 
+ * https://github.com/peterzimon/pico-toolbox
  **************************************************/
 
 #pragma once
