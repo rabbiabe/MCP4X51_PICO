@@ -5,6 +5,8 @@
  *
  * Header and MakeFile based on examples from 
  * https://github.com/peterzimon/pico-toolbox
+ * 
+ * scale() function based on Arduino map()
  **************************************************/
 
 #pragma once
