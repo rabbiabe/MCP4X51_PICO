@@ -8,8 +8,11 @@
     - `TAPER_B`: Linear Taper
     - `TAPER_C`: Reverse Audio Taper, resistance increases rapidly at first so that the first 25% of the potentiometer's range accounts for 60% of total resistance.
     - `TAPER_W`: The first 25% of range follows `TAPER_A` and the last 25% follows `TAPER_C`; The middle 50% has a linear characteristic.
+    - `TAPER_M`: Full wiper travel over first 50%, wiper stays at 100% after that.
+    - `TAPER_N`: Wiper at 100% for the first 50%, resistance declines after that.
+    - `TAPER_CUSTOM`: Custom taper specified by `setTaper()` (see below).
 
-Changelog:
+## Changelog:
 - V1.0 (1/25/24) Initial Version
 - V1.1 (2/26/24) Added: functions to set position in addition to directly setting wiper value; tapers; taper and button examples 
 ## Functions
@@ -20,7 +23,7 @@ Changelog:
  - `taper`: One of the standard tapers (*not* `TAPER_CUSTOM`) enumerated in Taper (see above). If not specified, defaults to `TAPER_B`.
  - `wiper`: Initial wiper position, 0-256. If not specified, defaults to 128.
  
- Returns `true` if successful, false if there is an error setting initial taper or wiper position.
+ Returns `true` if successful, `false` if there is an error setting initial taper or wiper position.
 ### bool setTaper(Taper taper)
  Sets the active taper to one of the standard tapers (*not* `TAPER_CUSTOM`).
  - `taper`: One of the values enumerated in Taper (see above).
@@ -29,26 +32,26 @@ Changelog:
  - `lower_bounds`: array of values (0-1000) representing the lower bounds of each segment, beginning with the 0-249 segment.
  - `upper_bounds`: array of values (0-1000) representing the upper bounds of each segment, beginning with the 0-249 segment.
 
- Returns `true` if successful, false for error.
+ Returns `true` if successful, `false` for error.
 ### Taper getTaper()
  Returns the currently selected taper.
 ### bool increment()
  Increases the wiper position by one step, will hold at maximum.
  
- Returns `true` if successful, false for error.
+ Returns `true` if successful, `false` for error.
 ### bool decrement()
  Decreases the wiper position by one step, will hold at minimum.
  
- Returns `true` if successful, false for error.
+ Returns `true` if successful, `false` for error.
 ### bool writeValue(uint16_t value)
  Sets the potentiometer to a raw wiper value 0-256. This method ignores any taper and always sets the potentiometer to the specified value.
  - `value`: The potentiometer setting.
  
- Returns `true` if successful, false for error.
+ Returns `true` if successful, `false` for error.
 ### bool writePosition(uint16_t thousandths)
  Sets the potentiometer to a relative position between CCW and CW, in 0.1% increments (values 0-1000). This value is tapered before setting the potentiometer according to the taper value set by `init()` or `setTaper()`.
  
- Returns `true` if successful, false for error.
+ Returns `true` if successful, `false` for error.
 ### int16_t readValue()
  Returns the current raw wiper value 0-256 for the potentiometer if successful, -1 for error.
 ### int16_t readPosition()
