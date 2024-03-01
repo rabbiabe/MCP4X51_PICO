@@ -120,7 +120,7 @@ bool DigiPot_MCP4x51::setTaper(Taper taper)
     switch (taper)
     {
         case TAPER_A:
-            lower = { 0, 50, 150, 40 };
+            lower = { 0, 50, 150, 400 };
             upper = { 49, 149, 399, 1000};
             break;
         
