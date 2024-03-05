@@ -12,6 +12,8 @@
     - `TAPER_N`: Wiper at 100% for the first 50%, resistance declines after that.
     - `TAPER_CUSTOM`: Custom taper specified by `setTaper()` (see below).
 
+ Note that you will need to copy pico_sdk_import.cmake into the example directories in order to compile the examples.
+
 ## Changelog:
 - V1.0 (1/25/24) Initial Version
 - V1.1 (2/26/24) Added: functions to set position in addition to directly setting wiper value; tapers; taper and button examples 
